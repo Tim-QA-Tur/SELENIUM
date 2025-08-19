@@ -143,7 +143,7 @@ def test_check_api(browser, knockout):
 
     # определение body (тело) запроса, для создания нового покемона
     body_create = {
-        "name": "Atos",
+        "name": "Atos",  # придумайте имя для покемона или можно сгенерировать случайные значения для имени передав строку "generate"
         "photo_id": 68
     }
     # Выполнения POST запроса на создания нового покемона (в хедер указываем токен тренера)
@@ -160,3 +160,4 @@ def test_check_api(browser, knockout):
     assert WebDriverWait(browser, timeout=5, poll_frequency=1).until(EC.text_to_be_present_in_element(
 
         (By.CSS_SELECTOR, Locators.POK_TOTAL_COUNT), f'{count_before+1}')), 'Unexpected pokemons count'
+
