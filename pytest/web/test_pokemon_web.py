@@ -19,7 +19,7 @@ class Locators:
     ALERT = '[class*="auth__error"]'
     POK_TOTAL_COUNT = '[class*="pokemons"] [class*="total-count"]'
 
-URL = 'https://pokemonbattle-stage.ru/'
+URL = 'https://pokemonbattle-stage.ru/' # сайт который тестируем
     
     # каждый тест должен начинаться с test_
 def test_positive_login_stage(browser):
@@ -35,38 +35,38 @@ def test_positive_login_stage(browser):
     email_input = WebDriverWait(browser, timeout=10,poll_frequency=2).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, Locators.EMAIL)))
     email_input.click()
-    email_input.send_keys('6626101@mail.ru')
+    email_input.send_keys('USER EMAIL')
     # email.send_keys(user@mail.ru') # введи тут email своего тестового аккаунта на stage окружении
 
 	# ищем по селектору инпут "Password", кликаем по нему и вводим значение пароля
     password = browser.find_element(by=By.CSS_SELECTOR, value=Locators.PASSWORD)
     password.click()
-    password.send_keys('8jS5H4!dG44jfmM2209') # введи тут пароль своего тестового аккаунта на stage окружении
+    password.send_keys('USER PASSWORD') # введи тут пароль своего тестового аккаунта на stage окружении
 
 	# ищем по селектору кнопку "Войти" и кликаем по ней
     enter = browser.find_element(by=By.CSS_SELECTOR, value=Locators.LOGIN)
     enter.click()
 
     # ждем успешного входа и обновления страницы
-    WebDriverWait(browser, timeout=10, poll_frequency=2).until(EC.url_to_be('https://pokemonbattle-stage.ru/'))
+    WebDriverWait(browser, timeout=10, poll_frequency=2).until(EC.url_to_be('URL'))
 
 	# ищем элемент на странице, который содержит ID тренера
     trainer_id = WebDriverWait(browser, timeout=10, poll_frequency=2).until(
         EC.presence_of_element_located((By.CSS_SELECTOR, Locators.TRAINER_ID)))
 
 	# сравниваем полученный ID из кода теста с ID вашего тестового тренера
-    assert int(trainer_id.text) == 2429, 'Unexpected ID trainer'
+    assert int(trainer_id.text) == введите ID тренера, 'Unexpected ID trainer'
     
     # Чтобы каждый раз не писать код для новых тестов, можно переиспользовать, изменить существуюший. Для этого создаем новый файл conftest.py.
     # Conftest.py создадим Fixtura для настройки и запуска браузера. Это вспомогательная функция, ее можно вызвать из любого теста
     
     # Создаем переменные CASES, список кортежей для негативной проверки
 CASES = [
-    ('1', '6626101mail.ru', '8jS5H4!dG44jfmM2209', ('Введите корректную почту')),   # сообшение, которое видим при ввода Логин без @, правильный пароль,
-    ('2', '6626101@mail.ru', '8jS5H4!dG44jfmM220', ('Неверные логин или пароль')),  # Правильный логин, неправильный пароль,
-    ('3', '6626101@mail', '8jS5H4!dG44jfmM2209', ('Введите корректную почту')),     # Логин без домена, правильный пароль,
-    ('4', '', '8jS5H4!dG44jfmM2209', ('Введите почту')),                            # Поле логина пустое, правильный пароль,
-    ('5', '6626101@mail.ru', '', ('Введите пароль'))                                # Правильный логин, поле пароль пустое.
+    ('1', 'USER EMAIL.INVALID', 'USER PASSWORD.VALID', ('Введите корректную почту')),   # сообшение, которое видим при ввода Логин без @, правильный пароль,
+    ('2', 'USER EMAIL.VALID', 'USER PASSWORD.INVALID', ('Неверные логин или пароль')),  # Правильный логин, НЕправильный пароль,
+    ('3', 'USER EMAIL.INVALID', 'USER PASSWORD.VALID', ('Введите корректную почту')),     # Логин без домена, правильный пароль,
+    ('4', '', 'USER PASSWORD.VALID', ('Введите почту')),                            # Поле логина пустое, правильный пароль,
+    ('5', 'USER EMAIL.VALID', '', ('Введите пароль'))                                # Правильный логин, поле пароль пустое.
 ]
 
 @pytest.mark.parametrize('case_number, email, password, exp_alert', CASES)  # описание параметризации
@@ -99,13 +99,11 @@ def test_negative_login_stage(case_number, email, password, exp_alert, browser):
 
    # Теперь создадим большой сквозной сценарий, который будет заключатся:
    # 1. Логинимся, переходим на странице тренера, создаем покемона с помощью API методов POST
-   # а также отправить в накаут, чтобы создать новых покемонов, и проверяем на вэб интерфейсе, 
+   # а также отправить в накаут, чтобы создать нового покемона, и проверяем на вэб интерфейсе, 
    # что покемон созданный через API успешно добавлен. 
-   # своего рода интерация API методов и методов selenium
+   # своего рода интеграция API методов и методов selenium
 
    # В новом тесте создадим фикстуру knockout (накаут) в conftest.py, так как есть лимит на создание покемона
-    
-    
 def test_check_api(browser, knockout):
     """
     TPR-3. Check create pokemon by api request  (создание нового покемона через API метод)
@@ -115,11 +113,11 @@ def test_check_api(browser, knockout):
     email = WebDriverWait(browser, timeout=10, poll_frequency=2).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, Locators.EMAIL)))
     email.click()
-    email.send_keys('6626101@mail.ru')
+    email.send_keys('USER EMAIL.VALID') # вводим валидную почту
 
     password = browser.find_element(by=By.CSS_SELECTOR, value=Locators.PASSWORD)
     password.click()
-    password.send_keys('8jS5H4!dG44jfmM2209')
+    password.send_keys('USER PASSWORD.VALID')  № вводим правильный пароль
 
     enter = browser.find_element(by=By.CSS_SELECTOR, value=Locators.LOGIN)
     enter.click()
@@ -149,7 +147,7 @@ def test_check_api(browser, knockout):
         "photo_id": 68
     }
     # Выполнения POST запроса на создания нового покемона (в хедер указываем токен тренера)
-    header = {'Content-Type':'application/json','trainer_token': '6f8dce3e88f362e7f7d74d0cd250d02e'}
+    header = {'Content-Type':'application/json','trainer_token': 'введите свой токен'}
     response_create = requests.post(url='https://api.pokemonbattle-stage.ru/v2/pokemons', headers=header, json=body_create, timeout=3)
     
     # В ответ ожидаем статус код 201 (Покемон успешно создан)
@@ -158,6 +156,7 @@ def test_check_api(browser, knockout):
     # после создание нового покемона нужно обновить страницу
     browser.refresh()
 
-    # После добавления нового покемона кол покемонов увеличится на 1
+    # После добавления нового покемона кол-во покемонов увеличится на 1
     assert WebDriverWait(browser, timeout=5, poll_frequency=1).until(EC.text_to_be_present_in_element(
+
         (By.CSS_SELECTOR, Locators.POK_TOTAL_COUNT), f'{count_before+1}')), 'Unexpected pokemons count'
