@@ -27,14 +27,15 @@ def browser():
 @pytest.fixture(scope="function")   # фикстура будет работат в рамках тестовый функции (knockout)
 def knockout():
     """
-    Knockout all pokemons (отправить в накаут)
+    Knockout all pokemons (отправить в накаут всех живых покемонов)
     """
-    header = {'Content-Type':'application/json','trainer_token': '6f8dce3e88f362e7f7d74d0cd250d02e'}
-    pokemons = requests.get(url='https://api.pokemonbattle-stage.ru/v2/pokemons', params={"trainer_id": 2429},
+    header = {'Content-Type':'application/json','trainer_token': 'введите свой токен'}
+    pokemons = requests.get(url='https://api.pokemonbattle-stage.ru/v2/pokemons', params={"trainer_id": введите свой ID тренера},
                             headers=header, timeout=3)
     if 'data' in pokemons.json():
         for pokemon in pokemons.json()['data']:
             if pokemon['status'] != 0:
                 requests.post(url='https://api.pokemonbattle-stage.ru/v2/pokemons/knockout', headers=header,
                               json={"pokemon_id": pokemon['id']}, timeout=3)
+
 
